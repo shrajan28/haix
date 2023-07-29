@@ -1,0 +1,7 @@
+.PeopleCard {
+  display: flex;
+  padding: 20px;
+  border-bottom: 0.1px solid lightgray;
+  gap: 10px;
+  background-color: white;
+}

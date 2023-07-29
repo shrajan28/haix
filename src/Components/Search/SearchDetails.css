@@ -1,0 +1,16 @@
+.DetailsContainer {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+.DetailsContainer > div {
+  padding: 10px;
+  border-radius: 20px;
+}
+.Details-mid {
+  width: auto;
+  min-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

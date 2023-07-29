@@ -1,0 +1,16 @@
+.CardDetails > p {
+  margin: 0pc;
+}
+.CardDetails {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.location {
+  line-height: 30px;
+  color: grey;
+}
+.heading {
+  font-weight: 600;
+}
