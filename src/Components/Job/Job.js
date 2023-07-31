@@ -6,14 +6,25 @@ import JobCard from "./JobCard";
 import moment from "moment/moment";
 import Skeletal from "../../Skeletal";
 import { getJobs } from "../../config";
+import { useFilter } from "../../Context";
 const Job = () => {
-  const { isLoading, data } = useQuery("jobs", getJobs);
+  const filter = useFilter();
+  let { isLoading, data } = useQuery("jobs", get);
+  const [listdata, setData] = useState([]);
+  async function get() {
+    let data = await getJobs();
+
+    data = GetFilteredData(data.statsTimeline.jobDetails, filter.getFilters());
+    return data;
+  }
   const [activeJob, setActiveJob] = useState();
   useEffect(() => {
     if (!isLoading) {
-      setActiveJob(data.statsTimeline.jobDetails[0]);
+      setActiveJob(data[0]);
+      data = GetFilteredData(data, filter.getFilters());
+      setData(data);
     }
-  }, [isLoading]);
+  }, [isLoading, filter]);
   return (
     <div className="JobContainer">
       {isLoading ? (
@@ -23,7 +34,7 @@ const Job = () => {
           {" "}
           <div className="Job-left">
             <JobListing
-              JobListing={data.statsTimeline.jobDetails}
+              JobListing={listdata}
               activeJob={activeJob}
               setActiveJob={setActiveJob}
             />
@@ -44,8 +55,6 @@ export function JobListing({
   setActiveJob = () => {},
   showCount = undefined,
 }) {
-  const { isLoading, data } = useQuery("jobs", getJobs);
-  JobListing = data?.statsTimeline?.jobDetails;
   return (
     <>
       {JobListing?.map((job, index) => {
@@ -63,6 +72,7 @@ export function JobListing({
     </>
   );
 }
+
 function JobDetails({ job }) {
   return (
     <div className="JobDetailsContainer">
@@ -100,4 +110,33 @@ function getDays(value) {
   var today = moment().startOf("day");
   return moment.duration(today.diff(jobDate)).asDays();
 }
+
+export function GetFilteredData(data, filter) {
+  var tempData = data;
+  Object.keys(filter).forEach((key) => {
+    if (key == "postDate") {
+      tempData = getPastData(key, tempData, timeKey[filter[key]]);
+    } else {
+      tempData = tempData.filter((d) => {
+        return d[key] == filter[key];
+      });
+    }
+  });
+
+  return tempData;
+}
+function getPastData(key, data, timeVal) {
+  var today = moment().startOf(timeVal);
+  data = data.filter((d) => {
+    if (moment(d[key]).isBefore(today)) {
+      return true;
+    }
+  });
+  return data;
+}
+var timeKey = {
+  "Past month": "month",
+  "Past week": "week",
+  "Past 24 hours": "day",
+};
 export default Job;

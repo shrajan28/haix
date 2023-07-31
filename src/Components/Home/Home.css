@@ -6,12 +6,33 @@
 }
 .TagList {
   display: flex;
-
+  position: relative;
   gap: 20px;
   justify-content: center;
 }
+.dropdown {
+  border: 2px solid lightgray;
+  border-radius: 20px;
+  padding: 10px;
+
+  position: static;
+}
+.Dropdown-menu {
+  border-radius: 10px;
+  position: absolute;
+  background: white;
+  padding: 10px;
+  border: 1px solid gray;
+}
+.green {
+  background-color: green;
+}
+.show {
+  display: inline;
+}
 .link {
   text-decoration: none;
+  width: fit-content;
 }
 .link::selection {
   background-color: red;

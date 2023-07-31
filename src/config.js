@@ -60,7 +60,55 @@ const details = {
     },
   ],
 };
+export const filterCategories = {
+  Jobs: [
+    {
+      label: "DatePosted",
+      data: "postDate",
+      values: ["AnyTime", "Past month", "Past week", "Past 24 hours"],
+    },
+    {
+      label: "Experience Level",
+      data: "",
+      values: [
+        "Internship",
+        "Entry Level",
+        "Associate",
+        "Mid-Senior level",
+        "Director",
+        "Executive",
+      ],
+    },
+    {
+      label: "Job type",
+      values: ["Full-time", "Part-time", "Temporary"],
+      data: "",
+    },
 
+    {
+      label: "On-site/Remote",
+      values: ["On-site", "Remote", "Hybrid"],
+      data: "workplaceType",
+    },
+  ],
+  People: [
+    {
+      label: "Connections",
+      values: ["1st", "2nd", "3rd"],
+      data: "connectionDegree",
+    },
+    {
+      label: "Locations",
+      values: ["India", "United States", "Karnataka India", "Bengaluru"],
+      data: "location",
+    },
+    {
+      label: "Current Company",
+      values: ["India", "United States", "Karnataka India", "Bengaluru"],
+      data: "companyName",
+    },
+  ],
+};
 export const getDetails = async (query) => {
   let newPromise = new Promise(function (resolve, reject) {
     setTimeout(function () {

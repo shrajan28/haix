@@ -1,12 +1,17 @@
 import { useQuery } from "react-query";
 import "./People.css";
-import { getPeople } from "../../config";
+import { filterCategories, getPeople } from "../../config";
 import { useEffect, useMemo, useState } from "react";
 import CardDetails from "../../Atoms/CardDetails";
 import Skeletal from "../../Skeletal";
 import Pagination from "../Pagination/Pagination";
 import Tag from "../Tag/Tag";
+import Popup from "reactjs-popup";
+import { useFilter } from "../../Context";
+import { GetFilteredData } from "../Job/Job";
+import Insight from "../Insights/Insight";
 const People = () => {
+  const filters = useFilter();
   const { isLoading, data } = useQuery("people", getPeople);
   const [activePage, setActivePage] = useState(1);
   const pageSize = 10;
@@ -14,8 +19,16 @@ const People = () => {
     if (isLoading) return;
     const firstPageIndex = (activePage - 1) * pageSize;
     const lastPageIndex = firstPageIndex + pageSize;
-    return data.statsTimeline.salesLead.slice(firstPageIndex, lastPageIndex);
-  }, [isLoading, activePage]);
+    var temp = data.statsTimeline.salesLead.slice(
+      firstPageIndex,
+      lastPageIndex
+    );
+    if (filters.getPeopleCompanyList().length == 0) {
+      getFiltersOptions(temp, filters);
+    }
+    temp = GetFilteredData(temp, filters.getFilters());
+    return temp;
+  }, [isLoading, activePage, filters]);
 
   return (
     <div className="PeopleContainer">
@@ -47,12 +60,18 @@ const PeopleList = ({ peopleList }) => {
               style={{ borderRadius: "50%" }}
               src={person.profileImageUrl}
             ></img>
-            <CardDetails
-              label={person.fullName}
-              name={person.title}
-              location={person.location}
-              st
-            />
+            <div style={{ flex: "1" }}>
+              <CardDetails
+                label={person.fullName}
+                name={person.title}
+                location={person.location}
+              />
+              <div></div>
+              <div>
+                <Insight personInfo={person.personInfo} />
+              </div>
+            </div>
+
             <Tag
               label={"Connect"}
               style={{ color: "#0a66c2", border: "1.5px solid #0a66c2" }}
@@ -64,6 +83,20 @@ const PeopleList = ({ peopleList }) => {
   );
 };
 
+const getFiltersOptions = (data, filters) => {
+  var filter = filterCategories.People.map((a) => {
+    const optionset = new Set();
+    data.forEach((d) => {
+      optionset.add(d[a.data]);
+    });
+    return {
+      label: a.label,
+      values: Array.from(optionset),
+      data: a.data,
+    };
+  });
+  filters.OnUpdatePeopleCompanyList(filter);
+};
 const PageNumber = ({ count }) => {
   return <div></div>;
 };

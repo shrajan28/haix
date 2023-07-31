@@ -21,7 +21,14 @@ const Home = () => {
         onSubmit={handlSubmit}
         className="SearchField"
       />
-      {isSearch ? <TagList /> : <></>}
+      {isSearch ? (
+        <div>
+          {" "}
+          <TagList />
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
